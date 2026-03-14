@@ -1,0 +1,577 @@
+{
+  "name": "AI Job Application Automation with Contact Tracking",
+  "nodes": [
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "id": "e5433594-65cc-40b5-880f-898c85441814",
+      "name": "Combine Job Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        928,
+        2048
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "jobs",
+        "options": {}
+      },
+      "id": "d9896c36-42c0-4e6b-b7f4-20475f5fd2c5",
+      "name": "Split Jobs",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        2192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1hhAfil99vfh2M9tRdxkHuqGAm-w_et7WYdX1EqbdXrk",
+          "cachedResultName": "Job Application Sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "4b6f23aa-72d8-4bbc-8834-10e431e5611f",
+      "name": "Update Job Tracker Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        1600,
+        2192
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9kJiaCh1nbm7qJ6A",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.indeed.com/rss?q=AI+Engineer&l=United+States",
+        "options": {}
+      },
+      "id": "ea16e717-c314-4506-8b1c-967854e90f14",
+      "name": "Indeed RSS - AI Engineer",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        704,
+        2768
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.indeed.com/rss?q=ML+Engineer&l=United+States",
+        "options": {}
+      },
+      "id": "863353ea-d313-42c2-b740-491e7c73c464",
+      "name": "Indeed RSS - ML Engineer",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        704,
+        2960
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.indeed.com/rss?q=AI+Researcher&l=United+States",
+        "options": {}
+      },
+      "id": "c78809c0-b097-4643-bc71-2b9c2069c9d5",
+      "name": "Indeed RSS - AI Researcher",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        704,
+        3152
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "b699d948-59c1-48c0-9db1-950dc3cf824d",
+      "name": "Check for New Jobs",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        2288
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI%20Engineer%20OR%20ML%20Engineer%20OR%20AI%20Researcher&location=Europe&f_TPR=r86400",
+        "options": {}
+      },
+      "id": "b6689a64-fe13-4a71-8a24-9806ac82ed9e",
+      "name": "LinkedIn RSS - AI Jobs",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        688,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.glassdoor.com/Job/jobs.htm?sc.keyword=AI+Engineer&locT=N&locId=0&jobType=&fromAge=1&radius=100&format=rss",
+        "options": {}
+      },
+      "id": "de33c332-1ea7-4be8-831e-ff6e4f3f3f64",
+      "name": "Glassdoor RSS - AI Engineer",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        2192
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.stepstone.com/5/ergebnisliste.html?ke=AI+Engineer&ws=Europe&format=rss",
+        "options": {}
+      },
+      "id": "bd7b4e1d-5f56-4fd1-971e-a03b27252021",
+      "name": "StepStone RSS - AI Engineer EU",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        2384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.monster.com/jobs/search/?q=Machine-Learning-Engineer&where=Europe&format=rss",
+        "options": {}
+      },
+      "id": "9bf28a1d-b710-4065-9f99-cda78f604ed3",
+      "name": "Monster RSS - ML Engineer",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        2576
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.adzuna.com/v1/api/jobs/de/search/1?app_id=<__PLACEHOLDER_VALUE__adzuna_app_id__>&app_key=<__PLACEHOLDER_VALUE__adzuna_app_key__>&results_per_page=50&what=AI%20Engineer%20OR%20ML%20Engineer%20OR%20AI%20Researcher",
+        "options": {}
+      },
+      "id": "d36d6dc8-6501-4819-9ab1-9368797b9e0d",
+      "name": "Adzuna API - AI Jobs EU",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        704,
+        1424
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://remoteok.com/api?tag=ai",
+        "options": {}
+      },
+      "id": "8e44ce87-ee2f-435b-9efd-3c6da4180fa4",
+      "name": "RemoteOK API - AI Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        704,
+        1616
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.themuse.com/api/public/jobs?category=Data%20Science&category=Engineering&page=0",
+        "options": {}
+      },
+      "id": "37a5056c-e7ab-483b-be30-7eabb56aa876",
+      "name": "The Muse API - AI Engineer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        704,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.reed.co.uk/jobs/ai-engineer/rss",
+        "options": {}
+      },
+      "id": "ec148b33-185e-451f-a6ec-4a6954808bb1",
+      "name": "Reed UK RSS - AI Engineer",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse different API response formats and normalize to consistent structure\nconst jobs = [];\n\n// Loop through all input items from different API sources\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  // Detect source and parse accordingly\n  \n  // Adzuna API format\n  if (data.results && Array.isArray(data.results)) {\n    for (const job of data.results) {\n      jobs.push({\n        title: job.title || '',\n        company: job.company?.display_name || 'Unknown',\n        location: job.location?.display_name || 'Not specified',\n        jobLink: job.redirect_url || '',\n        source: 'Adzuna'\n      });\n    }\n  }\n  \n  // RemoteOK API format (array of jobs)\n  else if (Array.isArray(data)) {\n    for (const job of data) {\n      if (job.id) { // Skip the first metadata item\n        jobs.push({\n          title: job.position || '',\n          company: job.company || 'Unknown',\n          location: job.location || 'Remote',\n          jobLink: `https://remoteok.com/remote-jobs/${job.id}` || '',\n          source: 'RemoteOK'\n        });\n      }\n    }\n  }\n  \n  // The Muse API format\n  else if (data.results && Array.isArray(data.results)) {\n    for (const job of data.results) {\n      jobs.push({\n        title: job.name || '',\n        company: job.company?.name || 'Unknown',\n        location: job.locations?.[0]?.name || 'Not specified',\n        jobLink: job.refs?.landing_page || '',\n        source: 'The Muse'\n      });\n    }\n  }\n  \n  // Generic fallback for unknown formats\n  else {\n    jobs.push({\n      title: data.title || data.name || data.position || '',\n      company: data.company || data.company_name || 'Unknown',\n      location: data.location || 'Not specified',\n      jobLink: data.url || data.link || data.job_url || '',\n      source: 'API'\n    });\n  }\n}\n\n// Return array with jobs field containing all parsed jobs\nreturn [{ json: { jobs } }];"
+      },
+      "id": "6a011c1f-a771-4069-8470-d4a0dd8f0ad1",
+      "name": "Parse API Job Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "jobLink, title, company",
+        "options": {}
+      },
+      "id": "c869857b-9c07-4359-9578-a01866115cfe",
+      "name": "Remove Duplicate Jobs",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        480,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "90a10281-adca-44d0-9fd5-21875bf32460",
+      "name": "Combine API Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        528
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f6f7d51d-a0f4-4a0c-b0ad-75648261018d",
+      "name": "Merge All Job Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize all job data from RSS feeds and API sources to consistent format\nconst jobs = [];\n\n// Loop through all input items\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  // Check if this is already-parsed API job data (has jobs array)\n  if (data.jobs && Array.isArray(data.jobs)) {\n    // Already normalized from API parser - just add to jobs array\n    jobs.push(...data.jobs);\n  }\n  // Check if this is RSS feed item (has title, link, etc.)\n  else if (data.title || data.link) {\n    // Parse RSS feed structure\n    const job = {\n      title: data.title || '',\n      company: data['company'] || data['dc:creator'] || data['author'] || 'Unknown',\n      location: data['location'] || data['indeed:location'] || data['geo:lat'] ? 'Location Available' : 'Not specified',\n      jobLink: data.link || data.guid || '',\n      source: data.source || 'RSS Feed'\n    };\n    jobs.push(job);\n  }\n  // Fallback for other formats\n  else {\n    const job = {\n      title: data.title || data.name || data.position || '',\n      company: data.company || data.company_name || 'Unknown',\n      location: data.location || 'Not specified',\n      jobLink: data.jobLink || data.url || data.link || '',\n      source: data.source || 'Unknown'\n    };\n    jobs.push(job);\n  }\n}\n\n// Return array with jobs field containing all normalized jobs\nreturn [{ json: { jobs } }];"
+      },
+      "id": "644ba833-b45b-4fc1-91d1-c7485657eff0",
+      "name": "Normalize All Job Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        2192
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Combine Job Results": {
+      "main": [
+        [
+          {
+            "node": "Merge All Job Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Jobs": {
+      "main": [
+        [
+          {
+            "node": "Update Job Tracker Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for New Jobs": {
+      "main": [
+        [
+          {
+            "node": "Indeed RSS - AI Engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Indeed RSS - ML Engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Indeed RSS - AI Researcher",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn RSS - AI Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Glassdoor RSS - AI Engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "StepStone RSS - AI Engineer EU",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Monster RSS - ML Engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Adzuna API - AI Jobs EU",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RemoteOK API - AI Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "The Muse API - AI Engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reed UK RSS - AI Engineer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed RSS - AI Engineer": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed RSS - ML Engineer": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Indeed RSS - AI Researcher": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "LinkedIn RSS - AI Jobs": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Glassdoor RSS - AI Engineer": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "StepStone RSS - AI Engineer EU": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Monster RSS - ML Engineer": {
+      "main": [
+        [
+          {
+            "node": "Combine Job Results",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Adzuna API - AI Jobs EU": {
+      "main": [
+        [
+          {
+            "node": "Combine API Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RemoteOK API - AI Jobs": {
+      "main": [
+        [
+          {
+            "node": "Combine API Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "The Muse API - AI Engineer": {
+      "main": [
+        [
+          {
+            "node": "Combine API Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Reed UK RSS - AI Engineer": {
+      "main": [
+        []
+      ]
+    },
+    "Combine API Results": {
+      "main": [
+        [
+          {
+            "node": "Parse API Job Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse API Job Data": {
+      "main": [
+        [
+          {
+            "node": "Merge All Job Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge All Job Sources": {
+      "main": [
+        [
+          {
+            "node": "Normalize All Job Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Jobs": {
+      "main": [
+        [
+          {
+            "node": "Split Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize All Job Data": {
+      "main": [
+        [
+          {
+            "node": "Split Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Remove Duplicate Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "availableInMCP": false
+  },
+  "versionId": "45ca6512-19ca-41f2-ad40-fbecfe9162f4",
+  "meta": {
+    "instanceId": "d836c520f40212aad0e04390422546eb4e87c2c5c64dbfdc847400a4f8bce169"
+  },
+  "id": "wHr5KFSgb8J6s7OJ",
+  "tags": []
+}

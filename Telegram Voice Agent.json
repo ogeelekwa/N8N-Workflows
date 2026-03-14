@@ -1,0 +1,221 @@
+{
+  "name": "Telegram Voice Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        752,
+        96
+      ],
+      "id": "de9487e1-ca14-40bc-901d-2a78a65dcce9",
+      "name": "Telegram Trigger",
+      "webhookId": "0eeb79e9-ac6d-4c21-bb6d-690248973e2d"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        96
+      ],
+      "id": "48fc8ab1-7ccb-40bb-a0ed-21406422d39b",
+      "name": "Get a file",
+      "webhookId": "0f77dfc6-55fe-49e7-9a7b-f125daae26ef"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "speechToText",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        96
+      ],
+      "id": "eb84be23-e0a9-4ca7-bab9-c3248bd86f13",
+      "name": "Transcribe audio or video",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant who is extremely funny."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        96
+      ],
+      "id": "005897ab-6450-4968-8917-ea862fb41f58",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        240
+      ],
+      "id": "2538facb-165a-45f3-826a-d98a01103939",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "value": "9PVP7ENhDskL0KYHAKtD",
+          "mode": "id"
+        },
+        "text": "={{ $json.output }}",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        96
+      ],
+      "id": "12173681-c2f1-4f88-b26a-b957a47218ce",
+      "name": "Convert text to speech",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1664,
+        96
+      ],
+      "id": "67249916-988a-4ca8-ba8a-089b4c29ce1f",
+      "name": "Send an audio file",
+      "webhookId": "e26a3316-eac5-4262-bf15-c85b5f8dc105"
+    },
+    {
+      "parameters": {
+        "content": "# Telegram Voice Output ",
+        "height": 400,
+        "width": 1216,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        656,
+        0
+      ],
+      "id": "19d0bc9a-2523-4b45-a7ea-47fb60f34e93",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio or video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio or video": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert text to speech": {
+      "main": [
+        [
+          {
+            "node": "Send an audio file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "aaf28499-2152-47ec-892c-0d998ecff4ba",
+  "meta": {
+    "instanceId": "d836c520f40212aad0e04390422546eb4e87c2c5c64dbfdc847400a4f8bce169"
+  },
+  "id": "35ORcfRsjBrxeWpR",
+  "tags": []
+}
